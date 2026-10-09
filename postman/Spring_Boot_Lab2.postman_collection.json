@@ -1,0 +1,1400 @@
+{
+  "info": {
+    "name": "ЛР2 Spring Boot — валидация REST-сервиса",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "29 проверок POST /feedback. В baseUrl задан http://localhost:8082. Каждая проверка независима."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8082",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Корректные запросы и границы",
+      "item": [
+        {
+          "name": "01. Корректный полный запрос",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"success\"); pm.expect(data.errorCode).to.eql(\"\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Идентификаторы сохранены\", function () { const req = JSON.parse(pm.request.body.raw); pm.expect(data.uid).to.eql(req.uid); pm.expect(data.operationUid).to.eql(req.operationUid); pm.expect(data.errorMessage).to.eql(\"\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 200, errorCode = пустая строка."
+          },
+          "response": []
+        },
+        {
+          "name": "02. Только обязательные поля",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"success\"); pm.expect(data.errorCode).to.eql(\"\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Идентификаторы сохранены\", function () { const req = JSON.parse(pm.request.body.raw); pm.expect(data.uid).to.eql(req.uid); pm.expect(data.operationUid).to.eql(req.operationUid); pm.expect(data.errorMessage).to.eql(\"\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"op-001\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"communicationId\": 10\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 200, errorCode = пустая строка."
+          },
+          "response": []
+        },
+        {
+          "name": "03. Граница: идентификаторы 32 символа, communicationId = 1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"success\"); pm.expect(data.errorCode).to.eql(\"\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Идентификаторы сохранены\", function () { const req = JSON.parse(pm.request.body.raw); pm.expect(data.uid).to.eql(req.uid); pm.expect(data.operationUid).to.eql(req.operationUid); pm.expect(data.errorMessage).to.eql(\"\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n  \"operationUid\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 1,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 200, errorCode = пустая строка."
+          },
+          "response": []
+        },
+        {
+          "name": "04. Граница: communicationId = 100000",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"success\"); pm.expect(data.errorCode).to.eql(\"\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Идентификаторы сохранены\", function () { const req = JSON.parse(pm.request.body.raw); pm.expect(data.uid).to.eql(req.uid); pm.expect(data.operationUid).to.eql(req.operationUid); pm.expect(data.errorMessage).to.eql(\"\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 100000,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 200, errorCode = пустая строка."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 Отдельные проверки валидации",
+      "item": [
+        {
+          "name": "05. uid: отсутствует",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"uid\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "06. uid: равен null",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"uid\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": null,\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "07. uid: пустая строка",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"uid\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "08. uid: только пробелы",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"uid\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"   \",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "09. uid: длина 33 символа",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"uid\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "10. operationUid: отсутствует",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"operationUid\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "11. operationUid: равен null",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"operationUid\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": null,\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "12. operationUid: пустая строка",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"operationUid\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "13. operationUid: только пробелы",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"operationUid\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"   \",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "14. operationUid: длина 33 символа",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"operationUid\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "15. systemTime: отсутствует",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"systemTime\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "16. systemTime: равен null",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"systemTime\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": null,\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "17. systemTime: пустая строка",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"systemTime\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "18. systemTime: только пробелы",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"systemTime\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"   \",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "19. communicationId: равен 0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"communicationId\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 0,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "20. communicationId: равен 100001",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"communicationId\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 100001,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "21. communicationId: отсутствует",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"communicationId\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "22. communicationId: равен null",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"communicationId\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": null,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 Совместные нарушения",
+      "item": [
+        {
+          "name": "23. Все обязательные поля отсутствуют",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"uid\"); pm.expect(data.errorMessage).to.include(\"operationUid\"); pm.expect(data.errorMessage).to.include(\"systemTime\"); pm.expect(data.errorMessage).to.include(\"communicationId\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "24. Все ограничения нарушены вместе",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"uid\"); pm.expect(data.errorMessage).to.include(\"operationUid\"); pm.expect(data.errorMessage).to.include(\"systemTime\"); pm.expect(data.errorMessage).to.include(\"communicationId\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n  \"operationUid\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"\",\n  \"source\": \"Postman\",\n  \"communicationId\": 0,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04 Собственное исключение и приоритет",
+      "item": [
+        {
+          "name": "25. Собственное исключение: uid = 123",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"UnsupportedCodeException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"123\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 10,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = UnsupportedCodeException."
+          },
+          "response": []
+        },
+        {
+          "name": "26. Приоритет: uid = 123 и communicationId = 0",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });",
+                  "pm.test(\"Указаны все ошибочные поля\", function () { pm.expect(data.errorMessage).to.include(\"communicationId\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"123\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": 0,\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "05 Дополнительные проверки тела запроса",
+      "item": [
+        {
+          "name": "27. Некорректный JSON",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"uid\": \"1\",",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "28. Неверный тип communicationId",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uid\": \"1\",\n  \"operationUid\": \"op-001\",\n  \"systemName\": \"ERP\",\n  \"systemTime\": \"2026-10-08T10:00:00Z\",\n  \"source\": \"Postman\",\n  \"communicationId\": \"abc\",\n  \"templateId\": 1,\n  \"productCode\": 2,\n  \"smsCode\": 1234\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        },
+        {
+          "name": "29. Пустое тело запроса",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+                  "const data = pm.response.json();",
+                  "pm.test(\"Результат и код ошибки\", function () { pm.expect(data.code).to.eql(\"failed\"); pm.expect(data.errorCode).to.eql(\"ValidationException\"); });",
+                  "pm.test(\"Структура ответа и время\", function () { [\"uid\", \"operationUid\", \"systemTime\", \"code\", \"errorCode\", \"errorMessage\"].forEach(function (key) { pm.expect(data).to.have.property(key); pm.expect(data[key]).to.be.a(\"string\"); }); pm.expect(Number.isNaN(Date.parse(data.systemTime))).to.eql(false); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/feedback",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "feedback"
+              ]
+            },
+            "description": "Ожидается HTTP 400, errorCode = ValidationException."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
